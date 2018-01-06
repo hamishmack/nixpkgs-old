@@ -24,6 +24,8 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [ pkgconfig intltool ];
   propagatedBuildInputs = [ glib gnutls libproxy gsettings_desktop_schemas ];
 
+  NIX_LDFLAGS = if stdenv.isDarwin then "-lintl" else null;
+
   doCheck = false; # tests need to access the certificates (among other things)
 
   meta = with stdenv.lib; {

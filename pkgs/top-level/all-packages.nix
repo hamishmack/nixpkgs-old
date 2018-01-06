@@ -9754,9 +9754,6 @@ with pkgs;
   };
 
   libproxy = callPackage ../development/libraries/libproxy {
-    stdenv = if stdenv.isDarwin
-      then overrideCC stdenv gcc
-      else stdenv;
   };
 
   libpseudo = callPackage ../development/libraries/libpseudo { };
