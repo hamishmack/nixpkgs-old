@@ -38,8 +38,10 @@ let
   ghcCommand'    = if isGhcjs then "ghcjs" else "ghc";
   ghcCommand = "${ghc.targetPrefix}${ghcCommand'}";
   ghcCommandCaps= lib.toUpper ghcCommand';
-  libDir        = if isHaLVM then "$out/lib/HaLVM-${ghc.version}" else "$out/lib/${ghcCommand}-${ghc.version}";
-  docDir        = "$out/share/doc/ghc/html";
+  libDirSuffix  = if isHaLVM then "/lib/HaLVM-${ghc.version}" else "/lib/${ghcCommand}-${ghc.version}";
+  libDir        = "$out" + libDirSuffix;
+  docDirSuffix  = "/share/doc/ghc/html";
+  docDir        = "$out" + docDirSuffix;
   packageCfgDir = "${libDir}/package.conf.d";
   paths         = lib.filter (x: x ? isHaskellLibrary) (lib.closePropagation packages);
   hasLibraries  = lib.any (x: x.isHaskellLibrary) paths;
@@ -50,7 +52,7 @@ let
                    ++ lib.optional targetPlatform.isDarwin llvmPackages.clang);
 in
 if paths == [] && !withLLVM then ghc else
-symlinkJoin {
+let this = symlinkJoin {
   # this makes computing paths from the name attribute impossible;
   # if such a feature is needed, the real compiler name should be saved
   # as a dedicated drv attribute, like `compiler-name`
@@ -129,5 +131,11 @@ symlinkJoin {
   passthru = {
     preferLocalBuild = true;
     inherit (ghc) version meta;
+    ghcEnvVars = {
+      "NIX_${ghcCommandCaps}" = "${this.out}/bin/${ghcCommand}";
+      "NIX_${ghcCommandCaps}PKG" = "${this.out}/bin/${ghcCommand}-pkg";
+      "NIX_${ghcCommandCaps}_DOCDIR" = "${this.out}${docDirSuffix}";
+      "NIX_${ghcCommandCaps}_LIBDIR" = "${this.out}${libDirSuffix}";
+    };
   };
-}
+}; in this
