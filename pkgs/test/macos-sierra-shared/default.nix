@@ -3,7 +3,7 @@
 let
   makeBigExe = stdenv: prefix: rec {
 
-    count = 320;
+    count = 500;
 
     sillyLibs = lib.genList (i: stdenv.mkDerivation rec {
       name = "${prefix}-fluff-${toString i}";
@@ -54,6 +54,7 @@ let
         EOF
       '';
       buildPhase = ''
+        export NIX_DEBUG=1
         $CXX -std=c++11 main.cxx ${toString (map (x: "-l${x.name}") sillyLibs)} -o ${prefix}-asdf
       '';
       buildInputs = sillyLibs;
