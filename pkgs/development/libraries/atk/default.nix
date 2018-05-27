@@ -1,4 +1,4 @@
-{ stdenv, fetchurl, meson, ninja, gettext, pkgconfig, glib
+{ stdenv, fetchurl, pkgconfig, perl, glib
 , fixDarwinDylibNames, gobjectIntrospection, gnome3
 }:
 
@@ -15,19 +15,13 @@ stdenv.mkDerivation rec {
     sha256 = "1z7laf6qwv5zsqcnj222dm5f43c6f3liil0cgx4s4s62xjk1wfnd";
   };
 
-  patches = [
-    # darwin linker arguments https://bugzilla.gnome.org/show_bug.cgi?id=794326
-    (fetchurl {
-      url = https://bugzilla.gnome.org/attachment.cgi?id=369680;
-      sha256 = "11v8fhpsbapa04ifb2268cga398vfk1nq8i628441632zjz1diwg";
-    })
-  ];
+  enableParallelBuilding = true;
 
   outputs = [ "out" "dev" ];
 
   buildInputs = stdenv.lib.optional stdenv.isDarwin fixDarwinDylibNames;
 
-  nativeBuildInputs = [ meson ninja pkgconfig gettext gobjectIntrospection ];
+  nativeBuildInputs = [ pkgconfig perl gobjectIntrospection ];
 
   propagatedBuildInputs = [
     # Required by atk.pc
