@@ -2905,7 +2905,7 @@ let self = _self // overrides; _self = with self; {
       url = "mirror://cpan/authors/id/B/BI/BINGOS/${name}.tar.gz";
       sha256 = "1q4b0fkdn4sh8ym9dig21w96p7kzrhq66lqhn0dy1l3pgx413zlc";
     };
-    doCheck = false;
+    propagatedBuildInputs = [ ArchiveExtract LogMessage ModulePluggable ObjectAccessor PackageConstants TermUI ];
     meta = {
       homepage = https://github.com/jib/cpanplus-devel;
       description = "Ameliorated interface to the CPAN";
@@ -6546,6 +6546,20 @@ let self = _self // overrides; _self = with self; {
     src = fetchurl {
       url = "mirror://cpan/authors/id/G/GW/GWARD/${name}.tar.gz";
       sha256 = "0xskl9lcj07sdfx5dkma5wvhhgf5xlsq0khgh8kk34dm6dv0dpwv";
+    };
+  };
+
+  Git = buildPerlPackage rec {
+    name = "Git-0.42";
+    src = fetchurl {
+      url = "mirror://cpan/authors/id/M/MS/MSOUTH/${name}.tar.gz";
+      sha256 = "9469a9f398f3a2bf2b0500566ee41d3ff6fae460412a137185767a1cc4783a6d";
+    };
+    propagatedBuildInputs = [ Error ];
+    meta = {
+      maintainers = [ maintainers.limeytexan ];
+      description = "This is the Git.pm, plus the other files in the perl/Git directory, from github's git/git";
+      license = stdenv.lib.licenses.free;
     };
   };
 

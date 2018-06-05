@@ -58,6 +58,11 @@
     github = "DamienCassou";
     name = "Damien Cassou";
   };
+  das_j = {
+    email = "janne@hess.ooo";
+    github = "dasJ";
+    name = "Janne Heß";
+  };
   DerGuteMoritz = {
     email = "moritz@twoticketsplease.de";
     github = "DerGuteMoritz";
@@ -2972,6 +2977,11 @@
     email = "phreedom@yandex.ru";
     github = "phreedom";
     name = "Evgeny Egorochkin";
+  };
+  phryneas = {
+    email = "mail@lenzw.de";
+    github = "phryneas";
+    name = "Lenz Weber";
   };
   phunehehe = {
     email = "phunehehe@gmail.com";

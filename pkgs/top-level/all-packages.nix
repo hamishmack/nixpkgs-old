@@ -738,6 +738,8 @@ with pkgs;
 
   adapta-gtk-theme = callPackage ../misc/themes/adapta { };
 
+  adapta-kde-theme = callPackage ../misc/themes/adapta-kde { };
+
   aria2 = callPackage ../tools/networking/aria2 {
     inherit (darwin.apple_sdk.frameworks) Security;
   };
@@ -1889,6 +1891,15 @@ with pkgs;
     brotliSupport = true;
   };
 
+  curl_7_59 = callPackage ../tools/networking/curl/7_59.nix rec {
+    fetchurl = fetchurlBoot;
+    http2Support = true;
+    zlibSupport = true;
+    sslSupport = zlibSupport;
+    scpSupport = zlibSupport && !stdenv.isSunOS && !stdenv.isCygwin;
+    gssSupport = true;
+  };
+
   curl = callPackage ../tools/networking/curl rec {
     fetchurl = fetchurlBoot;
     http2Support = true;
@@ -2370,8 +2381,6 @@ with pkgs;
   fluentd = callPackage ../tools/misc/fluentd { };
 
   flvstreamer = callPackage ../tools/networking/flvstreamer { };
-
-  libbsd = callPackage ../development/libraries/libbsd { };
 
   libbladeRF = callPackage ../development/libraries/libbladeRF { };
 
@@ -3370,6 +3379,10 @@ with pkgs;
     inherit (darwin.apple_sdk.frameworks) CoreServices;
   };
 
+  medfile = callPackage ../development/libraries/medfile {
+    hdf5 = hdf5_1_8;
+  };
+
   memtester = callPackage ../tools/system/memtester { };
 
   minergate = callPackage ../applications/misc/minergate { };
@@ -4147,7 +4160,9 @@ with pkgs;
 
   opendht = callPackage ../development/libraries/opendht {};
 
-  opendkim = callPackage ../development/libraries/opendkim { };
+  opendkim = callPackage ../development/libraries/opendkim {
+    libbsd = libbsd-freedesktop;
+  };
 
   opendylan = callPackage ../development/compilers/opendylan {
     opendylan-bootstrap = opendylan_bin;
@@ -4399,6 +4414,8 @@ with pkgs;
   pfstools = callPackage ../tools/graphics/pfstools { };
 
   philter = callPackage ../tools/networking/philter { };
+
+  phodav = callPackage ../tools/networking/phodav { };
 
   pinentry = callPackage ../tools/security/pinentry {
     libcap = if stdenv.isDarwin then null else libcap;
@@ -4908,6 +4925,8 @@ with pkgs;
   shadowsocks-libev = callPackage ../tools/networking/shadowsocks-libev { };
 
   sharutils = callPackage ../tools/archivers/sharutils { };
+
+  schema2ldif = callPackage ../tools/text/schema2ldif { };
 
   shocco = callPackage ../tools/text/shocco { };
 
@@ -6119,7 +6138,7 @@ with pkgs;
 
   elmPackages = recurseIntoAttrs (callPackage ../development/compilers/elm { });
 
-  adobe_flex_sdk = callPackage ../development/compilers/adobe-flex-sdk { };
+  apache-flex-sdk = callPackage ../development/compilers/apache-flex-sdk { };
 
   fpc = callPackage ../development/compilers/fpc { };
 
@@ -6782,6 +6801,8 @@ with pkgs;
 
   microscheme = callPackage ../development/compilers/microscheme { };
 
+  mint = callPackage ../development/compilers/mint { };
+
   mitscheme = callPackage ../development/compilers/mit-scheme {
    texLive = texlive.combine { inherit (texlive) scheme-small; };
    texinfo = texinfo5;
@@ -6872,6 +6893,8 @@ with pkgs;
   opa = callPackage ../development/compilers/opa {
     ocamlPackages = ocamlPackages_4_02;
   };
+
+  opaline = callPackage ../development/tools/ocaml/opaline { };
 
   opam = callPackage ../development/tools/ocaml/opam { };
 
@@ -7004,6 +7027,8 @@ with pkgs;
 
   bupc = callPackage ../development/compilers/bupc { };
 
+  urn = callPackage ../development/compilers/urn { };
+
   urweb = callPackage ../development/compilers/urweb { };
 
   inherit (callPackage ../development/compilers/vala { })
@@ -7134,7 +7159,13 @@ with pkgs;
 
   guile = guile_2_2;
 
-  hadoop = callPackage ../applications/networking/cluster/hadoop { };
+  inherit (callPackage ../applications/networking/cluster/hadoop { })
+    hadoop_2_7
+    hadoop_2_8
+    hadoop_2_9
+    hadoop_3_0
+    hadoop_3_1;
+  hadoop = hadoop_2_7;
 
   io = callPackage ../development/interpreters/io { };
 
@@ -8637,6 +8668,8 @@ with pkgs;
   box2d = callPackage ../development/libraries/box2d { };
 
   buddy = callPackage ../development/libraries/buddy { };
+
+  bulletml = callPackage ../development/libraries/bulletml { };
 
   bwidget = callPackage ../development/libraries/bwidget { };
 
@@ -12595,6 +12628,8 @@ with pkgs;
 
   mlmmj = callPackage ../servers/mail/mlmmj { };
 
+  morty = callPackage ../servers/web-apps/morty { };
+
   myserver = callPackage ../servers/http/myserver { };
 
   nas = callPackage ../servers/nas { };
@@ -12838,6 +12873,7 @@ with pkgs;
   prometheus-blackbox-exporter = callPackage ../servers/monitoring/prometheus/blackbox-exporter.nix { };
   prometheus-collectd-exporter = callPackage ../servers/monitoring/prometheus/collectd-exporter.nix { };
   prometheus-consul-exporter = callPackage ../servers/monitoring/prometheus/consul-exporter.nix { };
+  prometheus-dnsmasq-exporter = callPackage ../servers/monitoring/prometheus/dnsmasq-exporter.nix { };
   prometheus-dovecot-exporter = callPackage ../servers/monitoring/prometheus/dovecot-exporter.nix { };
   prometheus-fritzbox-exporter = callPackage ../servers/monitoring/prometheus/fritzbox-exporter.nix { };
   prometheus-haproxy-exporter = callPackage ../servers/monitoring/prometheus/haproxy-exporter.nix { };
@@ -12921,6 +12957,7 @@ with pkgs;
 
   samba4 = callPackage ../servers/samba/4.x.nix {
     python = python2;
+    libbsd = libbsd-freedesktop;
   };
 
   sambaMaster = callPackage ../servers/samba/master.nix { };
@@ -13439,13 +13476,13 @@ with pkgs;
     ];
   };
 
-  linux_copperhead_stable = callPackage ../os-specific/linux/kernel/linux-copperhead-stable.nix {
-    kernelPatches = with kernelPatches; [
-      bridge_stp_helper
-      modinst_arg_list_too_long
-      tag_hardened
-    ];
-  };
+  linux_copperhead_stable = (linux_4_16.override {
+    kernelPatches = linux_4_16.kernelPatches ++ [
+      kernelPatches.copperhead_4_16
+      kernelPatches.tag_hardened
+     ];
+    modDirVersionArg = linux_4_16.modDirVersion + "-hardened";
+  });
 
   # linux mptcp is based on the 4.4 kernel
   linux_mptcp = callPackage ../os-specific/linux/kernel/linux-mptcp.nix {
@@ -13490,6 +13527,17 @@ with pkgs;
   };
 
   linux_4_16 = callPackage ../os-specific/linux/kernel/linux-4.16.nix {
+    kernelPatches =
+      [ kernelPatches.bridge_stp_helper
+        # See pkgs/os-specific/linux/kernel/cpu-cgroup-v2-patches/README.md
+        # when adding a new linux version
+        # kernelPatches.cpu-cgroup-v2."4.11"
+        kernelPatches.modinst_arg_list_too_long
+        kernelPatches.bcm2835_mmal_v4l2_camera_driver # Only needed for 4.16!
+      ];
+  };
+
+  linux_4_17 = callPackage ../os-specific/linux/kernel/linux-4.17.nix {
     kernelPatches =
       [ kernelPatches.bridge_stp_helper
         # See pkgs/os-specific/linux/kernel/cpu-cgroup-v2-patches/README.md
@@ -13685,7 +13733,7 @@ with pkgs;
   linux = linuxPackages.kernel;
 
   # Update this when adding the newest kernel major version!
-  linuxPackages_latest = linuxPackages_4_16;
+  linuxPackages_latest = linuxPackages_4_17;
   linux_latest = linuxPackages_latest.kernel;
 
   # Build the kernel modules for the some of the kernels.
@@ -13696,6 +13744,7 @@ with pkgs;
   linuxPackages_4_9 = recurseIntoAttrs (linuxPackagesFor pkgs.linux_4_9);
   linuxPackages_4_14 = recurseIntoAttrs (linuxPackagesFor pkgs.linux_4_14);
   linuxPackages_4_16 = recurseIntoAttrs (linuxPackagesFor pkgs.linux_4_16);
+  linuxPackages_4_17 = recurseIntoAttrs (linuxPackagesFor pkgs.linux_4_17);
   # Don't forget to update linuxPackages_latest!
 
   # Intentionally lacks recurseIntoAttrs, as -rc kernels will quite likely break out-of-tree modules and cause failed Hydra builds.
@@ -13845,9 +13894,6 @@ with pkgs;
   multipath-tools = callPackage ../os-specific/linux/multipath-tools { };
 
   musl = callPackage ../os-specific/linux/musl { };
-  musl-fts = callPackage ../os-specific/linux/musl/fts.nix { };
-  musl-getconf = callPackage ../os-specific/linux/musl/getconf.nix { };
-  musl-getent = callPackage ../os-specific/linux/musl/getent.nix { };
 
   nettools = if stdenv.isLinux then callPackage ../os-specific/linux/net-tools { }
              else unixtools.nettools;
@@ -13869,6 +13915,8 @@ with pkgs;
 
   dep = callPackage ../development/tools/dep { };
 
+  dep2nix = callPackage ../development/tools/dep2nix { };
+
   easyjson = callPackage ../development/tools/easyjson { };
 
   go-bindata = callPackage ../development/tools/go-bindata { };
@@ -13889,8 +13937,6 @@ with pkgs;
   gotags = callPackage ../development/tools/gotags { };
 
   golint = callPackage ../development/tools/golint { };
-
-  godep = callPackage ../development/tools/godep { };
 
   godef = callPackage ../development/tools/godef { };
 
@@ -14137,6 +14183,7 @@ with pkgs;
     ubootRaspberryPi2
     ubootRaspberryPi3_32bit
     ubootRaspberryPi3_64bit
+    ubootRaspberryPiZero
     ubootSheevaplug
     ubootSopine
     ubootUtilite
@@ -14945,6 +14992,8 @@ with pkgs;
   baresip = callPackage ../applications/networking/instant-messengers/baresip {
     ffmpeg = ffmpeg_1;
   };
+
+  barrier = callPackage ../applications/misc/barrier {};
 
   banshee = callPackage ../applications/audio/banshee {
     gconf = pkgs.gnome2.GConf;
@@ -15951,7 +16000,7 @@ with pkgs;
 
   fomp = callPackage ../applications/audio/fomp { };
 
-  freecad = callPackage ../applications/graphics/freecad { };
+  freecad = callPackage ../applications/graphics/freecad { mpi = openmpi; };
 
   freemind = callPackage ../applications/misc/freemind { };
 
@@ -16770,6 +16819,8 @@ with pkgs;
 
   makeself = callPackage ../applications/misc/makeself { };
 
+  mapmap = libsForQt5.callPackage ../applications/video/mapmap { };
+
   marathon = callPackage ../applications/networking/cluster/marathon { };
   marathonctl = callPackage ../tools/virtualization/marathonctl { } ;
 
@@ -17111,6 +17162,8 @@ with pkgs;
   synapse = callPackage ../applications/misc/synapse {
     inherit (gnome3) libgee;
   };
+
+  synapse-bt = callPackage ../applications/networking/p2p/synapse-bt { };
 
   synfigstudio = callPackage ../applications/graphics/synfigstudio {
     fontsConf = makeFontsConf { fontDirectories = [ freefont_ttf ]; };
@@ -17475,6 +17528,8 @@ with pkgs;
   pstree = callPackage ../applications/misc/pstree { };
 
   ptask = callPackage ../applications/misc/ptask { };
+
+  pulseaudio-ctl = callPackage ../applications/audio/pulseaudio-ctl { };
 
   pulseaudio-dlna = callPackage ../applications/audio/pulseaudio-dlna { };
 
@@ -18006,7 +18061,7 @@ with pkgs;
       saslSupport = false;
       sasl = cyrus_sasl;
     })
-    subversion18 subversion19;
+    subversion18 subversion19 subversion_1_10;
 
   subversion = pkgs.subversion19;
 
@@ -18917,6 +18972,8 @@ with pkgs;
     inherit (darwin.apple_sdk.frameworks) Security;
   };
 
+  zeronet = callPackage ../applications/networking/p2p/zeronet { };
+
   zexy = callPackage ../applications/audio/pd-plugins/zexy  { };
 
   zgrviewer = callPackage ../applications/graphics/zgrviewer {};
@@ -19419,6 +19476,8 @@ with pkgs;
   robotfindskitten = callPackage ../games/robotfindskitten { };
 
   rocksndiamonds = callPackage ../games/rocksndiamonds { };
+
+  rrootage = callPackage ../games/rrootage { };
 
   saga = callPackage ../applications/gis/saga { };
 
@@ -20830,6 +20889,7 @@ with pkgs;
   inherit (callPackages ../tools/package-management/nix {
       storeDir = config.nix.storeDir or "/nix/store";
       stateDir = config.nix.stateDir or "/nix/var";
+      curl = curl_7_59;
       })
     nix
     nix1
@@ -21461,6 +21521,12 @@ with pkgs;
   inherit (unixtools) hexdump ps logger eject umount
                       mount wall hostname more sysctl getconf
                       getent;
+
+  fts = if hostPlatform.isMusl then netbsd.fts else null;
+
+  libbsd = netbsd.compat;
+
+  libbsd-freedesktop = callPackage ../development/libraries/libbsd {};
 
   inherit (recurseIntoAttrs (callPackages ../os-specific/bsd { }))
           netbsd;
