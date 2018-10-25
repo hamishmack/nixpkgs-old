@@ -39,7 +39,7 @@ stdenv.mkDerivation rec {
     dest=$out/share/fonts/truetype
     mkdir -p $dest
     find . -name "*.ttf" -exec cp -v {} $dest \;
-    chmod -x $dest/*.ttf
+    (cd $dest; chmod -x *.ttf)
   '';
 
   meta = with stdenv.lib; {
