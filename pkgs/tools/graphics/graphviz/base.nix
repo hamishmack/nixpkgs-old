@@ -47,10 +47,12 @@ stdenv.mkDerivation rec {
 
   postFixup = optionalString (xorg != null) ''
     substituteInPlace $out/bin/dotty --replace '`which lefty`' $out/bin/lefty
-    substituteInPlace $out/bin/vimdot \
-      --replace /usr/bin/vi '$(command -v vi)' \
-      --replace /usr/bin/vim '$(command -v vim)' \
-      --replace /usr/bin/vimdot $out/bin/vimdot \
+    if [ -f $out/bin/vimdot ]; then
+      substituteInPlace $out/bin/vimdot \
+        --replace /usr/bin/vi '$(command -v vi)' \
+        --replace /usr/bin/vim '$(command -v vim)' \
+        --replace /usr/bin/vimdot $out/bin/vimdot
+    fi
   '';
 
   meta = with stdenv.lib; {
